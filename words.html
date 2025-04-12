@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>겸딩이 단어외우기</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #f8f9fc;
+            --accent-color: #1cc88a;
+            --border-color: #e3e6f0;
+            --section1-color: rgba(78, 115, 223, 0.05);
+            --section2-color: rgba(28, 200, 138, 0.05);
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --correct-color: #1cc88a;
+            --wrong-color: #e74a3b;
+            --transition-speed: 0.3s;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            padding: 20px;
+            background-color: var(--secondary-color);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .app-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .app-title {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .app-subtitle {
+            color: #6c757d;
+            font-weight: 300;
+            font-size: 1.2rem;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background-color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .btn {
+            border-radius: 6px;
+            font-weight: 500;
+            padding: 10px 20px;
+            transition: all var(--transition-speed);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover, .btn-primary.active {
+            background-color: #2e59d9;
+            border-color: #2e59d9;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        .btn-success:hover {
+            background-color: #17a673;
+            border-color: #17a673;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: #858796;
+            border-color: #858796;
+        }
+
+        .btn-secondary:hover {
+            background-color: #717384;
+            border-color: #717384;
+            transform: translateY(-2px);
+        }
+
+        .score-display {
+            background-color: white;
+            border-left: 5px solid var(--primary-color);
+            padding: 15px 20px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+            transition: all var(--transition-speed);
+        }
+
+        .score-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .score-value {
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 1.4rem;
+        }
+
+        .word-sections-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section-container {
+            flex: 1;
+            min-width: 300px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        .section-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-header {
+            padding: 15px 20px;
+            font-weight: 600;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section1 .section-header {
+            background-color: var(--primary-color);
+        }
+
+        .section2 .section-header {
+            background-color: var(--accent-color);
+        }
+
+        .section1 {
+            background-color: var(--section1-color);
+        }
+
+        .section2 {
+            background-color: var(--section2-color);
+        }
+
+        .word-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1px;
+            background-color: var(--border-color);
+        }
+
+        .word-row {
+            display: contents;
+        }
+
+        .word-cell, .meaning-cell {
+            padding: 15px;
+            background-color: white;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            transition: all var(--transition-speed);
+        }
+
+        .word-cell {
+            font-weight: 500;
+        }
+
+        .section1 .word-cell:hover, .section1 .meaning-cell:hover {
+            background-color: rgba(78, 115, 223, 0.03);
+        }
+
+        .section2 .word-cell:hover, .section2 .meaning-cell:hover {
+            background-color: rgba(28, 200, 138, 0.03);
+        }
+
+        .word-cell.input-mode, .meaning-cell.input-mode {
+            padding: 8px;
+        }
+
+        .input-mode .word-input, .input-mode .meaning-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            transition: all var(--transition-speed);
+        }
+
+        .input-mode .word-input:focus, .input-mode .meaning-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+            outline: none;
+        }
+
+        .hidden-text {
+            display: none;
+        }
+
+        .result-correct {
+            color: var(--correct-color);
+            background-color: rgba(28, 200, 138, 0.05);
+        }
+
+        .result-wrong {
+            color: var(--wrong-color);
+            background-color: rgba(231, 74, 59, 0.05);
+        }
+
+        .result-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .result-correct .result-badge {
+            background-color: var(--correct-color);
+            color: white;
+        }
+
+        .result-wrong .result-badge {
+            background-color: var(--wrong-color);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .word-sections-container {
+                flex-direction: column;
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .control-group {
+                display: flex;
+                width: 100%;
+                gap: 10px;
+            }
+            
+            .control-group .btn {
+                flex: 1;
+            }
+        }
+
+        /* 애니메이션 효과 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .pulse {
+            animation: pulse 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .loader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+        }
+
+        .loader .spinner-border {
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="app-header">
+            <h1 class="app-title">겸딩이 단어장</h1>
+            <p class="app-subtitle">힘내서 공부해랑</p>
+        </header>
+        
+        <div class="controls">
+            <div class="control-group">
+                <button id="hideWords" class="btn btn-primary me-2">단어 가리기</button>
+                <button id="hideMeanings" class="btn btn-primary me-2">뜻 가리기</button>
+                <button id="submitBtn" class="btn btn-success d-none">제출하기</button>
+            </div>
+            <button id="refreshWords" class="btn btn-secondary">
+                <i class="fas fa-sync-alt me-1"></i> 새로운 단어
+            </button>
+        </div>
+        
+        <div id="scoreDisplay" class="score-display d-none fade-in">
+            <div class="score-text">
+                최종 점수: <span id="score" class="score-value">0</span><span class="score-value">/100</span>
+            </div>
+        </div>
+        
+        <div id="loadingIndicator" class="loader">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">로딩중...</span>
+            </div>
+        </div>
+        
+        <div id="wordSectionsContainer" class="word-sections-container d-none">
+            <div id="section1" class="section-container section1 slide-in">
+                <div class="section-header">
+                    <span>섹션 1</span>
+                    <span>단어 1-25</span>
+                </div>
+                <div id="wordContainer1" class="word-container">
+                    <!-- 섹션 1의 단어와 뜻이 여기에 동적으로 추가됩니다 -->
+                </div>
+            </div>
+            
+            <div id="section2" class="section-container section2 slide-in">
+                <div class="section-header">
+                    <span>섹션 2</span>
+                    <span>단어 26-50</span>
+                </div>
+                <div id="wordContainer2" class="word-container">
+                    <!-- 섹션 2의 단어와 뜻이 여기에 동적으로 추가됩니다 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 오류 메시지 Modal -->
+    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorModalLabel"><i class="fas fa-exclamation-triangle text-danger me-2"></i> 오류 발생</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="errorModalBody">
+                    <!-- 오류 메시지가 여기에 표시됩니다 -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            const jsonUrl = 'https://coconutparty.github.io/words/words.json';
+            let wordsList = [];
+            let currentMode = 'normal'; // normal, hideWords, hideMeanings
+            let errorModalInstance = null; // Modal 인스턴스 저장 변수
+            
+            // 오류 메시지 표시 함수
+            function showErrorAlert(message) {
+                if (!errorModalInstance) {
+                    errorModalInstance = new bootstrap.Modal(document.getElementById('errorModal'));
+                }
+                $('#errorModalBody').text(message);
+                errorModalInstance.show();
+            }
+            
+            // 단어 데이터 가져오기
+            function fetchWords() {
+                $('#loadingIndicator').removeClass('d-none');
+                $('#wordSectionsContainer').addClass('d-none');
+                
+                $.getJSON(jsonUrl, function(data) {
+                    wordsList = data;
+                    displayRandomWords();
+                }).fail(function() {
+                    showErrorAlert('단어 데이터를 불러오는데 실패했습니다. 네트워크 연결 또는 JSON 파일 경로를 확인해주세요.');
+                }).always(function() {
+                    $('#loadingIndicator').addClass('d-none');
+                    $('#wordSectionsContainer').removeClass('d-none');
+                });
+            }
+            
+            // 랜덤 단어 50개 선정 및 표시
+            function displayRandomWords() {
+                const randomWords = getRandomWords(50);
+                const container1 = $('#wordContainer1');
+                const container2 = $('#wordContainer2');
+                
+                container1.empty();
+                container2.empty();
+                
+                // 공부 팁 생성
+                generateStudyTip();
+                
+                randomWords.forEach((word, index) => {
+                    const sectionId = index < 25 ? 'section1' : 'section2';
+                    const container = index < 25 ? container1 : container2;
+                    const rowIndex = index % 25;
+                    
+                    // 단어 셀 생성
+                    const wordCell = $('<div>')
+                        .addClass('word-cell')
+                        .attr('data-section', sectionId)
+                        .attr('data-row', rowIndex)
+                        .attr('data-original', word.English)
+                        .html(word.English);
+                    
+                    // 뜻 셀 생성
+                    const meaningCell = $('<div>')
+                        .addClass('meaning-cell')
+                        .attr('data-section', sectionId)
+                        .attr('data-row', rowIndex)
+                        .attr('data-original', word.Korean)
+                        .html(word.Korean);
+                    
+                    container.append(wordCell, meaningCell);
+                });
+                
+                // 애니메이션 효과 추가
+                $('.section-container').addClass('slide-in');
+                
+                resetMode();
+            }
+            
+            // 공부 팁 생성
+            function generateStudyTip() {
+                // 로딩 상태 표시
+                $('.app-subtitle').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 팁 생성 중...');
+                
+                // 미리 준비된 영어 공부 팁들
+                const studyTips = [
+                    "단어를 문장 속에서 외우면 더 오래 기억돼요.",
+                    "하루에 10개씩, 꾸준히 학습하는 것이 중요해요.",
+                    "관련 단어끼리 묶어서 외우면 효과적이에요.",
+                    "자기 전에 복습하면 기억력이 향상돼요.",
+                    "단어 카드를 만들어 수시로 확인해보세요.",
+                    "비슷한 철자의 단어들을 함께 학습해보세요.",
+                    "영어 노래 가사로 단어를 외워보세요.",
+                    "단어의 어원을 알면 더 쉽게 외울 수 있어요.",
+                    "자신만의 연상법을 만들어보세요.",
+                    "소리 내어 발음하며 외우면 더 잘 기억돼요.",
+                    "영어 영화나 드라마를 자막과 함께 보세요.",
+                    "하루에 10분씩 꾸준히 학습하세요.",
+                    "단어장을 항상 가지고 다니세요.",
+                    "어플리케이션을 활용해 틈틈이 공부하세요.",
+                    "복습은 학습만큼 중요해요.",
+                    "영어 일기를 써보세요. 단어력이 향상됩니다.",
+                    "새 단어를 배우면 예문과 함께 외우세요.",
+                    "단어 게임으로 즐겁게 학습해보세요.",
+                    "영어 뉴스를 읽으며 새 단어를 배워보세요.",
+                    "비슷한 의미의 단어들을 함께 학습하세요.",
+                    "이미지와 단어를 연결해서 기억해보세요.",
+                    "스피킹 연습을 통해 단어를 활용해보세요.",
+                    "단어 사용 빈도를 고려해 중요한 것부터 외우세요.",
+                    "플래시카드 앱으로 틈틈이 복습하세요.",
+                    "영어 친구를 사귀어 실전에서 사용해보세요.",
+                    "힘내서 공부해랑! 포기하지 마세요!"
+                ];
+                
+                // 랜덤 팁 선택
+                const randomTip = studyTips[Math.floor(Math.random() * studyTips.length)];
+                
+                // 애니메이션과 함께 팁 표시
+                setTimeout(() => {
+                    $('.app-subtitle').text(randomTip).addClass('fade-in');
+                    setTimeout(() => {
+                        $('.app-subtitle').removeClass('fade-in');
+                    }, 1000);
+                }, 500);
+            }
+            
+            // 중복되지 않는 랜덤 단어 가져오기
+            function getRandomWords(count) {
+                const shuffled = [...wordsList].sort(() => 0.5 - Math.random());
+                return shuffled.slice(0, count);
+            }
+            
+            // 모드 초기화
+            function resetMode() {
+                currentMode = 'normal';
+                $('#hideWords, #hideMeanings').removeClass('active');
+                $('#submitBtn').addClass('d-none').prop('disabled', false).html('제출하기');
+                $('#scoreDisplay').addClass('d-none');
+                
+                $('.word-cell, .meaning-cell').each(function() {
+                    $(this).removeClass('input-mode hidden-text result-correct result-wrong');
+                    const originalText = $(this).attr('data-original');
+                    $(this).html(originalText);
+                });
+            }
+            
+            // 단어 가리기 모드
+            $('#hideWords').click(function() {
+                if (currentMode === 'hideWords') {
+                    resetMode();
+                    return;
+                }
+                
+                resetMode();
+                currentMode = 'hideWords';
+                $(this).addClass('active pulse');
+                $('#submitBtn').removeClass('d-none').prop('disabled', false).addClass('pulse');
+                
+                $('.word-cell').each(function() {
+                    $(this).addClass('input-mode');
+                    const originalText = $(this).attr('data-original');
+                    $(this).html(`
+                        <span class="hidden-text">${originalText}</span>
+                        <input type="text" class="word-input" placeholder="단어 입력" autocomplete="off">
+                    `);
+                });
+                
+                // 자동 포커스
+                $('.word-input').first().focus();
+                
+                // 엔터 키 이벤트 
+                $('.word-input').on('keypress', function(e) {
+                    if (e.which === 13) {
+                        const inputs = $('.word-input');
+                        const idx = inputs.index(this);
+                        
+                        if (idx < inputs.length - 1) {
+                            inputs.eq(idx + 1).focus();
+                        } else {
+                            $('#submitBtn').click();
+                        }
+                    }
+                });
+            });
+            
+            // 뜻 가리기 모드
+            $('#hideMeanings').click(function() {
+                if (currentMode === 'hideMeanings') {
+                    resetMode();
+                    return;
+                }
+                
+                resetMode();
+                currentMode = 'hideMeanings';
+                $(this).addClass('active pulse');
+                $('#submitBtn').removeClass('d-none').prop('disabled', false).addClass('pulse');
+                
+                $('.meaning-cell').each(function() {
+                    $(this).addClass('input-mode');
+                    const originalText = $(this).attr('data-original');
+                    $(this).html(`
+                        <span class="hidden-text">${originalText}</span>
+                        <input type="text" class="meaning-input" placeholder="뜻 입력" autocomplete="off">
+                    `);
+                });
+                
+                // 자동 포커스
+                $('.meaning-input').first().focus();
+                
+                // 엔터 키 이벤트
+                $('.meaning-input').on('keypress', function(e) {
+                    if (e.which === 13) {
+                        const inputs = $('.meaning-input');
+                        const idx = inputs.index(this);
+                        
+                        if (idx < inputs.length - 1) {
+                            inputs.eq(idx + 1).focus();
+                        } else {
+                            $('#submitBtn').click();
+                        }
+                    }
+                });
+            });
+            
+            // 제출 및 채점
+            $('#submitBtn').click(function() {
+                // 이미 비활성화 상태면 중복 실행 방지
+                if ($(this).prop('disabled')) {
+                    return;
+                }
+                
+                // 로딩 표시 및 비활성화
+                const $btn = $(this);
+                $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 채점 중...');
+                
+                let gradingPromise;
+                if (currentMode === 'hideWords') {
+                    gradingPromise = gradeWords();
+                } else if (currentMode === 'hideMeanings') {
+                    gradingPromise = gradeMeanings();
+                }
+
+                if (gradingPromise) {
+                    // 채점 완료 후 버튼을 비활성화 상태로 유지
+                    gradingPromise.finally(() => {
+                        // 버튼 상태 유지 (비활성화)
+                    });
+                } else {
+                    // 채점 함수가 호출되지 않은 경우 (이론상 발생하지 않음)
+                    $btn.prop('disabled', false).html('제출하기');
+                }
+            });
+            
+            // 뜻 채점 (OpenAI API 사용)
+            function gradeMeanings() {
+                const promises = [];
+                let totalCells = $('.meaning-cell.input-mode').length;
+                let processedCount = 0;
+                
+                // 진행 상태 표시 업데이트 함수
+                function updateProgress() {
+                    processedCount++;
+                    const progress = Math.floor((processedCount / totalCells) * 100);
+                    $('#submitBtn').html(`<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 채점 중... ${progress}%`);
+                }
+                
+                $('.meaning-cell.input-mode').each(function() {
+                    const $cell = $(this);
+                    const input = $cell.find('.meaning-input').val().trim();
+                    const correctAnswer = $cell.attr('data-original');
+                    
+                    $cell.removeClass('result-correct result-wrong');
+                    
+                    // 입력이 없는 경우 바로 오답 처리
+                    if (!input) {
+                        $cell.addClass('result-wrong');
+                        $cell.html(`<span class="result-badge">X</span>${correctAnswer}<small class="ms-2 text-muted text-danger">(입력 없음)</small>`);
+                        updateProgress();
+                        return promises.push(Promise.resolve(false));
+                    }
+                    
+                    // 입력과 정답이 정확히 일치하면 바로 정답 처리 (API 호출 절약)
+                    if (input === correctAnswer) {
+                        $cell.addClass('result-correct');
+                        $cell.html(`<span class="result-badge">O</span>${correctAnswer}`);
+                        updateProgress();
+                        return promises.push(Promise.resolve(true));
+                    }
+                    
+                    const promise = new Promise((resolve) => {
+                        // OpenAI API 요청 데이터
+                        const openaiData = {
+                            model: "gpt-4o-mini", // 가장 비용 효율적인 모델
+                            messages: [
+                                {
+                                    role: "system",
+                                    content: "당신은 단어의 의미 유사성을 정확히 평가하는 채점관입니다. 학생의 답변이 정답과 의미상 유사하거나 동일하면 \"correct\"를, 의미가 명확히 다르면 \"incorrect\"를 반환하세요."
+                                },
+                                {
+                                    role: "user",
+                                    content: `정답: ${correctAnswer}
+학생 답변: ${input}
+
+규칙:
+- 동의어, 유사 표현, 비슷한 설명은 정답으로 인정합니다.
+- 핵심 의미가 일치하면 사소한 차이는 무시합니다.
+- 'correct' 또는 'incorrect' 중 하나만 응답하세요.`
+                                }
+                            ],
+                            temperature: 0.1, // 일관된 결과를 위해 낮게 설정
+                            max_tokens: 5 // 매우 짧은 응답만 필요
+                        };
+                        
+                        // 백엔드 프록시 API 호출
+                        $.ajax({
+                            url: '/api/openai-proxy', // Vercel의 API 경로
+                            type: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify(openaiData),
+                            success: function(response) {
+                                try {
+                                    let result = 'incorrect'; // 기본값은 오답
+                                    // OpenAI 응답 구조에 맞게 파싱
+                                    if (response.choices && response.choices.length > 0 && response.choices[0].message) {
+                                        result = response.choices[0].message.content.trim().toLowerCase();
+                                        if (result.includes('correct')) {
+                                            result = 'correct';
+                                        } else {
+                                            result = 'incorrect';
+                                        }
+                                    }
+
+                                    if (result === 'correct') {
+                                        $cell.addClass('result-correct');
+                                        $cell.html(`<span class="result-badge">O</span>${correctAnswer}<small class="ms-2 text-muted">(입력: ${input})</small>`);
+                                        resolve(true);
+                                    } else {
+                                        $cell.addClass('result-wrong');
+                                        $cell.html(`<span class="result-badge">X</span>${correctAnswer}<small class="ms-2 text-muted text-danger">(입력: ${input})</small>`);
+                                        resolve(false);
+                                    }
+                                } catch (error) {
+                                    console.error('뜻 채점 파싱 오류 (OpenAI):', error, response);
+                                    // 파싱 오류 시 사용자에게 메시지 표시 및 모달 띄우기
+                                    showErrorAlert('채점 결과 처리 중 오류가 발생했습니다. API 응답 형식을 확인해주세요. (콘솔에서 자세한 정보 확인 가능)');
+                                    $cell.addClass('result-wrong');
+                                    $cell.html(`<span class="result-badge">!</span><span class="text-danger">채점 오류</span><small class="ms-2 text-muted">(정답: ${correctAnswer})</small>`);
+                                    resolve(false);
+                                }
+                                
+                                updateProgress();
+                            },
+                            error: function(error) {
+                                console.error('OpenAI API 오류:', error);
+                                // API 오류 시 사용자에게 모달 띄우기
+                                showErrorAlert('채점 API 호출에 실패했습니다. 네트워크 연결 또는 API 키를 확인해주세요.');
+                                // API 오류 시 단순 비교
+                                if (input === correctAnswer) {
+                                    $cell.addClass('result-correct');
+                                    $cell.html(`<span class="result-badge">O</span>${correctAnswer}`);
+                                    resolve(true);
+                                } else {
+                                    $cell.addClass('result-wrong');
+                                    $cell.html(`<span class="result-badge">X</span>${correctAnswer}<small class="ms-2 text-muted text-danger">(입력: ${input})</small>`);
+                                    resolve(false);
+                                }
+                                
+                                updateProgress();
+                            }
+                        });
+                    });
+                    
+                    promises.push(promise);
+                });
+                
+                return Promise.all(promises).then(results => {
+                    const correctCount = results.filter(result => result).length;
+                    $('#submitBtn').html('채점 완료');
+                    showScore(correctCount);
+                });
+            }
+            
+            // 단어 채점 - 영단어는 정확히 일치해야만 정답
+            function gradeWords() {
+                const promises = [];
+                
+                $('.word-cell.input-mode').each(function() {
+                    const $cell = $(this);
+                    const input = $cell.find('.word-input').val().trim();
+                    const correctAnswer = $cell.attr('data-original');
+                    
+                    $cell.removeClass('result-correct result-wrong');
+                    
+                    // 영단어는 철자가 정확히 일치해야 함 (대소문자 무시)
+                    const isCorrect = input.toLowerCase() === correctAnswer.toLowerCase();
+                    
+                    // 정답/오답 표시
+                    if (isCorrect) {
+                        $cell.addClass('result-correct');
+                        $cell.html(`<span class="result-badge">O</span>${correctAnswer}`);
+                    } else {
+                        $cell.addClass('result-wrong');
+                        // 오답 시 사용자 입력 표시 추가
+                        $cell.html(`<span class="result-badge">X</span>${correctAnswer}<small class="ms-2 text-muted text-danger">(입력: ${input})</small>`);
+                    }
+                    
+                    // 즉시 결과 반환
+                    promises.push(Promise.resolve(isCorrect));
+                });
+                
+                return Promise.all(promises).then(results => {
+                    const correctCount = results.filter(result => result).length;
+                    showScore(correctCount);
+                });
+            }
+            
+            // 점수 표시
+            function showScore(correctCount) {
+                const totalScore = correctCount * 2;
+                $('#score').text(totalScore);
+                $('#scoreDisplay').removeClass('d-none');
+                
+                // 애니메이션 효과
+                $('#scoreDisplay').addClass('pulse');
+                setTimeout(() => {
+                    $('#scoreDisplay').removeClass('pulse');
+                }, 500);
+            }
+            
+            // 새로고침 버튼
+            $('#refreshWords').click(function() {
+                // 로딩 표시
+                $(this).prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 로딩 중...');
+                
+                // 애니메이션 효과
+                $('.section-container').removeClass('slide-in');
+                
+                setTimeout(() => {
+                    displayRandomWords();
+                    $(this).prop('disabled', false).html('<i class="fas fa-sync-alt me-1"></i> 새로운 단어');
+                }, 300);
+            });
+            
+            // 초기 데이터 로드
+            fetchWords();
+        });
+    </script>
+</body>
+</html>
