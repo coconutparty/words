@@ -336,9 +336,14 @@
                 <button id="hideMeanings" class="btn btn-primary me-2">뜻 가리기</button>
                 <button id="submitBtn" class="btn btn-success d-none">제출하기</button>
             </div>
-            <button id="refreshWords" class="btn btn-secondary">
-                <i class="fas fa-sync-alt me-1"></i> 새로운 단어
-            </button>
+            <div class="control-group">
+                <button id="refreshWords" class="btn btn-secondary me-2">
+                    <i class="fas fa-sync-alt me-1"></i> 새로운 단어
+                </button>
+                <button id="showApiLogs" class="btn btn-info">
+                    <i class="fas fa-list-alt me-1"></i> API 로그
+                </button>
+            </div>
         </div>
         
         <div id="scoreDisplay" class="score-display d-none fade-in">
@@ -394,6 +399,30 @@
         </div>
     </div>
 
+    <!-- API 로그 Modal -->
+    <div class="modal fade" id="apiLogModal" tabindex="-1" aria-labelledby="apiLogModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="apiLogModalLabel"><i class="fas fa-list-alt me-2"></i> API 호출 로그</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info mb-3">
+                        <i class="fas fa-info-circle me-2"></i> 단어 채점을 위한 API 호출 로그입니다.
+                    </div>
+                    <div id="apiLogContainer" class="border rounded p-3 bg-light" style="max-height: 400px; overflow-y: auto;">
+                        <p class="text-muted text-center">아직 API 호출 기록이 없습니다.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="clearApiLogs" type="button" class="btn btn-warning">로그 지우기</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -402,6 +431,8 @@
             let wordsList = [];
             let currentMode = 'normal'; // normal, hideWords, hideMeanings
             let errorModalInstance = null; // Modal 인스턴스 저장 변수
+            let apiLogModalInstance = null; // API 로그 Modal 인스턴스
+            let apiLogs = []; // API 호출 로그 저장 배열
             
             // 오류 메시지 표시 함수
             function showErrorAlert(message) {
@@ -644,6 +675,75 @@
                 }
             });
             
+            // API 로그 모달 초기화
+            function initApiLogModal() {
+                if (!apiLogModalInstance) {
+                    apiLogModalInstance = new bootstrap.Modal(document.getElementById('apiLogModal'));
+                }
+            }
+
+            // API 로그 표시 함수
+            function showApiLogs() {
+                initApiLogModal();
+                
+                const $logContainer = $('#apiLogContainer');
+                
+                // 로그가 없는 경우
+                if (apiLogs.length === 0) {
+                    $logContainer.html('<p class="text-muted text-center">아직 API 호출 기록이 없습니다.</p>');
+                    apiLogModalInstance.show();
+                    return;
+                }
+                
+                // 로그 HTML 생성
+                let logsHtml = '';
+                apiLogs.forEach((log, index) => {
+                    const timestamp = new Date(log.timestamp).toLocaleString();
+                    const statusClass = log.success ? 'success' : 'danger';
+                    const statusText = log.success ? '성공' : '실패';
+                    
+                    logsHtml += `
+                        <div class="card mb-3">
+                            <div class="card-header bg-${statusClass} bg-opacity-10 d-flex justify-content-between">
+                                <span><strong>#${index + 1}</strong> - ${timestamp}</span>
+                                <span class="badge bg-${statusClass}">${statusText}</span>
+                            </div>
+                            <div class="card-body">
+                                <h6>요청:</h6>
+                                <pre class="bg-dark text-light p-2 rounded">${JSON.stringify(log.request, null, 2)}</pre>
+                                <h6>응답:</h6>
+                                <pre class="bg-dark text-light p-2 rounded">${JSON.stringify(log.response, null, 2)}</pre>
+                                ${log.error ? `<h6>오류:</h6><pre class="bg-danger bg-opacity-10 text-danger p-2 rounded">${JSON.stringify(log.error, null, 2)}</pre>` : ''}
+                                <div class="mt-2">
+                                    <strong>정답:</strong> ${log.correctAnswer || 'N/A'} | 
+                                    <strong>학생 입력:</strong> ${log.studentInput || 'N/A'} | 
+                                    <strong>결과:</strong> <span class="text-${log.result === 'correct' ? 'success' : 'danger'}">${log.result === 'correct' ? '정답' : '오답'}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                $logContainer.html(logsHtml);
+                apiLogModalInstance.show();
+            }
+            
+            // 로그 지우기 함수
+            function clearApiLogs() {
+                apiLogs = [];
+                $('#apiLogContainer').html('<p class="text-muted text-center">아직 API 호출 기록이 없습니다.</p>');
+            }
+            
+            // API 로그 버튼 클릭 이벤트
+            $('#showApiLogs').click(function() {
+                showApiLogs();
+            });
+            
+            // 로그 지우기 버튼 이벤트
+            $('#clearApiLogs').click(function() {
+                clearApiLogs();
+            });
+            
             // 뜻 채점 (OpenAI API 사용)
             function gradeMeanings() {
                 const promises = [];
@@ -704,6 +804,14 @@
                             max_tokens: 5 // 매우 짧은 응답만 필요
                         };
                         
+                        // API 로그용 정보 저장
+                        const logEntry = {
+                            timestamp: new Date(),
+                            request: openaiData,
+                            correctAnswer: correctAnswer,
+                            studentInput: input,
+                        };
+                        
                         // 백엔드 프록시 API 호출
                         $.ajax({
                             url: '/api/openai-proxy', // Vercel의 API 경로
@@ -723,6 +831,12 @@
                                         }
                                     }
 
+                                    // API 로그 저장
+                                    logEntry.response = response;
+                                    logEntry.success = true;
+                                    logEntry.result = result;
+                                    apiLogs.push(logEntry);
+
                                     if (result === 'correct') {
                                         $cell.addClass('result-correct');
                                         $cell.html(`<span class="result-badge">O</span>${correctAnswer}<small class="ms-2 text-muted">(입력: ${input})</small>`);
@@ -734,6 +848,13 @@
                                     }
                                 } catch (error) {
                                     console.error('뜻 채점 파싱 오류 (OpenAI):', error, response);
+                                    // API 로그 저장 (오류)
+                                    logEntry.response = response;
+                                    logEntry.success = false;
+                                    logEntry.error = error.toString();
+                                    logEntry.result = 'error';
+                                    apiLogs.push(logEntry);
+                                    
                                     // 파싱 오류 시 사용자에게 메시지 표시 및 모달 띄우기
                                     showErrorAlert('채점 결과 처리 중 오류가 발생했습니다. API 응답 형식을 확인해주세요. (콘솔에서 자세한 정보 확인 가능)');
                                     $cell.addClass('result-wrong');
@@ -745,6 +866,13 @@
                             },
                             error: function(error) {
                                 console.error('OpenAI API 오류:', error);
+                                
+                                // API 로그 저장 (오류)
+                                logEntry.success = false;
+                                logEntry.error = error.statusText || '네트워크 오류';
+                                logEntry.result = 'error';
+                                apiLogs.push(logEntry);
+                                
                                 // API 오류 시 사용자에게 모달 띄우기
                                 showErrorAlert('채점 API 호출에 실패했습니다. 네트워크 연결 또는 API 키를 확인해주세요.');
                                 // API 오류 시 단순 비교
