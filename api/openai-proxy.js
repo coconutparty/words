@@ -1,13 +1,12 @@
-javascript// api/openai-proxy.js
+// api/openai-proxy.js
 export default async function handler(req, res) {
-  // POST 요청만 허용
   if (req.method !== 'POST') {
     return res.status(405).json({ error: '허용되지 않는 메소드입니다' });
   }
 
   try {
-    // OpenAI API 키 (환경변수에서 가져옴)
-    const apiKey = process.env.OPENAI_API_KEY;
+    // API 키 하드코딩 (보안상 위험한 방식)
+    const apiKey = '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'; 
     
     // 클라이언트에서 받은 데이터
     const data = req.body;
