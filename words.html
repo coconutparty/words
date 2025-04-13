@@ -775,9 +775,13 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="alert alert-${log.result === 'correct' ? 'success' : 'danger'} mb-3">
-                                        <strong>AI 응답:</strong> <span class="fw-bold">"${log.rawResponse || 'N/A'}"</span>
-                                        <div class="mt-2 small">
-                                            <strong>판정결과:</strong> <span class="badge bg-${log.result === 'correct' ? 'success' : 'danger'}">${log.result === 'correct' ? '정답' : '오답'}</span>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <strong>AI 판정:</strong> 
+                                            <span class="badge bg-${log.result === 'correct' ? 'success' : 'danger'}">${log.result === 'correct' ? '정답' : '오답'}</span>
+                                        </div>
+                                        <div class="border-top pt-2 mt-2">
+                                            <strong>AI 해설:</strong>
+                                            <div class="mt-2" style="white-space: pre-line">${log.explanation || '해설 없음'}</div>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -790,11 +794,18 @@
                                             <div class="border p-2 rounded bg-light">${log.studentInput || 'N/A'}</div>
                                         </div>
                                     </div>
-                                    <h6>API 요청:</h6>
-                                    <pre class="bg-dark text-light p-2 rounded small" style="max-height: 150px; overflow-y: auto;">${JSON.stringify(log.request, null, 2)}</pre>
-                                    <h6>API 응답:</h6>
-                                    <pre class="bg-dark text-light p-2 rounded small" style="max-height: 150px; overflow-y: auto;">${JSON.stringify(log.response, null, 2)}</pre>
-                                    ${log.error ? `<h6>오류:</h6><pre class="bg-danger bg-opacity-10 text-danger p-2 rounded">${JSON.stringify(log.error, null, 2)}</pre>` : ''}
+                                    <h6 class="dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#apiDetail${index}" aria-expanded="false">
+                                        API 상세 정보 <i class="fas fa-chevron-down ms-1 small"></i>
+                                    </h6>
+                                    <div class="collapse" id="apiDetail${index}">
+                                        <h6>API 요청:</h6>
+                                        <pre class="bg-dark text-light p-2 rounded small" style="max-height: 150px; overflow-y: auto;">${JSON.stringify(log.request, null, 2)}</pre>
+                                        <h6>API 응답:</h6>
+                                        <pre class="bg-dark text-light p-2 rounded small" style="max-height: 150px; overflow-y: auto;">${JSON.stringify(log.response, null, 2)}</pre>
+                                        <h6>원본 응답:</h6>
+                                        <pre class="bg-light p-2 rounded">${log.rawResponse || 'N/A'}</pre>
+                                        ${log.error ? `<h6>오류:</h6><pre class="bg-danger bg-opacity-10 text-danger p-2 rounded">${JSON.stringify(log.error, null, 2)}</pre>` : ''}
+                                    </div>
                                 </div>
                             </div>`;
                     });
@@ -868,21 +879,26 @@
                             messages: [
                                 {
                                     role: "system",
-                                    content: "당신은 단어의 의미 유사성을 정확히 평가하는 채점관입니다. 학생의 답변이 정답과 의미상 유사하거나 동일하면 \"correct\"를, 의미가 명확히 다르면 \"incorrect\"를 반환하세요."
+                                    content: "당신은 영어 단어의 한국어 의미 유사성을 정확히 평가하고 해설하는 채점관입니다. 학생의 답변이 정답과 의미상 유사하거나 동일하면 정답으로, 의미가 명확히 다르면 오답으로 판단하세요. 먼저 결론(correct/incorrect)을 말하고, 그 다음 한국어로 왜 그렇게 판단했는지 간결하게 설명해주세요."
                                 },
                                 {
                                     role: "user",
                                     content: `정답: ${correctAnswer}
 학생 답변: ${input}
 
-규칙:
+답변 형식:
+1. 첫 줄에 'correct' 또는 'incorrect' 중 하나만 응답
+2. 그 다음 줄부터 한국어로 채점 이유 설명 (왜 정답인지 또는 왜 오답인지)
+
+판단 기준:
 - 동의어, 유사 표현, 비슷한 설명은 정답으로 인정합니다.
 - 핵심 의미가 일치하면 사소한 차이는 무시합니다.
-- 'correct' 또는 'incorrect' 중 하나만 응답하세요.`
+- 학생의 답변이 정답보다 더 구체적이거나 포괄적이어도 핵심 의미가 맞으면 정답입니다.`
+- 단순히 영어단어의 발음을 한국어로 표현한 것은 오답으로 판단합니다.
                                 }
                             ],
                             temperature: 0.1, // 일관된 결과를 위해 낮게 설정
-                            max_tokens: 5 // 매우 짧은 응답만 필요
+                            max_tokens: 150 // 더 긴 설명을 위해 토큰 수 증가
                         };
                         
                         // API 로그용 정보 저장
@@ -902,13 +918,26 @@
                             success: function(response) {
                                 try {
                                     let result = 'incorrect'; // 기본값은 오답
+                                    let explanation = ''; // 설명 부분
+                                    
                                     // OpenAI 응답 구조에 맞게 파싱
                                     if (response.choices && response.choices.length > 0 && response.choices[0].message) {
-                                        result = response.choices[0].message.content.trim().toLowerCase();
-                                        if (result.includes('correct')) {
-                                            result = 'correct';
-                                        } else {
-                                            result = 'incorrect';
+                                        const fullResponse = response.choices[0].message.content.trim();
+                                        const lines = fullResponse.split('\n');
+                                        
+                                        // 첫 줄은 correct/incorrect 판단
+                                        if (lines.length > 0) {
+                                            const firstLine = lines[0].toLowerCase();
+                                            if (firstLine.includes('correct')) {
+                                                result = 'correct';
+                                            } else {
+                                                result = 'incorrect';
+                                            }
+                                            
+                                            // 나머지 줄은 설명
+                                            if (lines.length > 1) {
+                                                explanation = lines.slice(1).join('\n').trim();
+                                            }
                                         }
                                     }
 
@@ -919,6 +948,7 @@
                                     logEntry.rawResponse = response.choices && response.choices.length > 0 && response.choices[0].message 
                                         ? response.choices[0].message.content.trim() 
                                         : 'N/A';
+                                    logEntry.explanation = explanation;
                                     apiLogs.push(logEntry);
 
                                     if (result === 'correct') {
