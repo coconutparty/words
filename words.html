@@ -428,6 +428,7 @@
     <script>
         $(document).ready(function() {
             const jsonUrl = 'https://coconutparty.github.io/words/words.json';
+            const localJsonUrl = 'words.json';
             let wordsList = [];
             let currentMode = 'normal'; // normal, hideWords, hideMeanings
             let errorModalInstance = null; // Modal 인스턴스 저장 변수
@@ -477,15 +478,110 @@
                 $('#loadingIndicator').removeClass('d-none');
                 $('#wordSectionsContainer').addClass('d-none');
                 
-                $.getJSON(jsonUrl, function(data) {
-                    wordsList = data;
-                    displayRandomWords();
-                }).fail(function() {
-                    showErrorAlert('단어 데이터를 불러오는데 실패했습니다. 네트워크 연결 또는 JSON 파일 경로를 확인해주세요.');
-                }).always(function() {
-                    $('#loadingIndicator').addClass('d-none');
-                    $('#wordSectionsContainer').removeClass('d-none');
+                console.log('로컬 단어 데이터 로드 시도 중: ' + localJsonUrl);
+                
+                // 먼저 로컬 파일 시도
+                $.ajax({
+                    url: localJsonUrl,
+                    dataType: 'json',
+                    timeout: 5000, // 5초 타임아웃
+                    success: function(data) {
+                        console.log('로컬 단어 데이터 로드 성공! 단어 수: ' + data.length);
+                        wordsList = data;
+                        displayRandomWords();
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error('로컬 단어 데이터 로드 실패:', textStatus, errorThrown);
+                        
+                        // 원격 JSON URL 시도
+                        console.log('원격 URL로 시도합니다: ' + jsonUrl);
+                        
+                        $.ajax({
+                            url: jsonUrl,
+                            dataType: 'json',
+                            timeout: 10000, // 10초 타임아웃
+                            success: function(data) {
+                                console.log('원격 단어 데이터 로드 성공! 단어 수: ' + data.length);
+                                wordsList = data;
+                                displayRandomWords();
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                console.error('원격 URL에서도 로드 실패:', textStatus, errorThrown);
+                                showErrorAlert('단어 데이터를 불러오는데 실패했습니다. 네트워크 연결 또는 JSON 파일 경로를 확인해주세요.<br><br>오류 정보: ' + textStatus + ' - ' + errorThrown);
+                                
+                                // 테스트용 더미 데이터 생성
+                                createDummyData();
+                            }
+                        });
+                    },
+                    complete: function() {
+                        $('#loadingIndicator').addClass('d-none');
+                        $('#wordSectionsContainer').removeClass('d-none');
+                    }
                 });
+            }
+            
+            // 테스트용 더미 데이터 생성
+            function createDummyData() {
+                console.log('테스트용 더미 데이터를 생성합니다.');
+                
+                wordsList = [
+                    { English: "apple", Korean: "사과" },
+                    { English: "banana", Korean: "바나나" },
+                    { English: "cat", Korean: "고양이" },
+                    { English: "dog", Korean: "개" },
+                    { English: "elephant", Korean: "코끼리" },
+                    { English: "friend", Korean: "친구" },
+                    { English: "good", Korean: "좋은" },
+                    { English: "happy", Korean: "행복한" },
+                    { English: "important", Korean: "중요한" },
+                    { English: "jump", Korean: "점프하다" },
+                    { English: "king", Korean: "왕" },
+                    { English: "love", Korean: "사랑" },
+                    { English: "money", Korean: "돈" },
+                    { English: "night", Korean: "밤" },
+                    { English: "open", Korean: "열다" },
+                    { English: "paper", Korean: "종이" },
+                    { English: "quick", Korean: "빠른" },
+                    { English: "run", Korean: "달리다" },
+                    { English: "study", Korean: "공부하다" },
+                    { English: "time", Korean: "시간" },
+                    { English: "umbrella", Korean: "우산" },
+                    { English: "very", Korean: "매우" },
+                    { English: "water", Korean: "물" },
+                    { English: "xylophone", Korean: "실로폰" },
+                    { English: "yellow", Korean: "노란색" },
+                    { English: "zebra", Korean: "얼룩말" },
+                    { English: "above", Korean: "위에" },
+                    { English: "below", Korean: "아래에" },
+                    { English: "computer", Korean: "컴퓨터" },
+                    { English: "desk", Korean: "책상" },
+                    { English: "earth", Korean: "지구" },
+                    { English: "family", Korean: "가족" },
+                    { English: "garden", Korean: "정원" },
+                    { English: "house", Korean: "집" },
+                    { English: "ice", Korean: "얼음" },
+                    { English: "juice", Korean: "주스" },
+                    { English: "key", Korean: "열쇠" },
+                    { English: "light", Korean: "빛" },
+                    { English: "mountain", Korean: "산" },
+                    { English: "name", Korean: "이름" },
+                    { English: "ocean", Korean: "바다" },
+                    { English: "pencil", Korean: "연필" },
+                    { English: "question", Korean: "질문" },
+                    { English: "river", Korean: "강" },
+                    { English: "star", Korean: "별" },
+                    { English: "tree", Korean: "나무" },
+                    { English: "under", Korean: "아래" },
+                    { English: "voice", Korean: "목소리" },
+                    { English: "window", Korean: "창문" },
+                    { English: "young", Korean: "젊은" }
+                ];
+                
+                displayRandomWords();
+                
+                // 더미 데이터 사용 알림
+                showErrorAlert('외부 단어 데이터를 불러오는데 실패하여 테스트용 더미 데이터를 사용합니다. 인터넷 연결 상태를 확인해주세요.');
             }
             
             // 랜덤 단어 50개 선정 및 표시
@@ -893,8 +989,8 @@
 판단 기준:
 - 동의어, 유사 표현, 비슷한 설명은 정답으로 인정합니다.
 - 핵심 의미가 일치하면 사소한 차이는 무시합니다.
-- 학생의 답변이 정답보다 더 구체적이거나 포괄적이어도 핵심 의미가 맞으면 정답입니다.`
-- 단순히 영어단어의 발음을 한국어로 표현한 것은 오답으로 판단합니다.
+- 학생의 답변이 정답보다 더 구체적이거나 포괄적이어도 핵심 의미가 맞으면 정답입니다.
+- 단순히 영어단어의 발음을 한국어로 표현한 것은 오답으로 판단합니다.`
                                 }
                             ],
                             temperature: 0.1, // 일관된 결과를 위해 낮게 설정
