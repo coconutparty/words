@@ -3,11 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>겸딩이 단어장 - 관리자</title>
+    <meta name="description" content="겸딩이 단어장 관리자 페이지 - API 사용량 및 로그 확인">
+    <meta property="og:title" content="겸딩이 단어장 - 관리자">
+    <meta property="og:description" content="API 사용 기록 및 토큰 사용량 분석">
+    <meta property="og:url" content="https://coconutparty.net/admin.html">
+    <meta property="og:type" content="website">
+    <title>겸딩이 단어장 - 관리자 | coconutparty.net</title>
+    <link rel="canonical" href="https://coconutparty.net/admin.html">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js">
     <style>
         :root {
             --primary-color: #4e73df;
@@ -350,6 +355,7 @@
         $(document).ready(function() {
             // 관리자 비밀번호 (실제 운영에서는 서버에서 검증해야 함)
             const ADMIN_PASSWORD = "admin1234";
+            const STORAGE_KEY = "coconutparty_apiLogs";
             
             // 저장된 API 로그 데이터 (실제로는 서버에서 가져오거나 로컬 스토리지에서 가져옴)
             let apiLogs = [];
@@ -361,9 +367,33 @@
             
             // 로컬 스토리지에서 로그 데이터 가져오기
             function loadLogsFromStorage() {
-                const savedLogs = localStorage.getItem('apiLogs');
+                const savedLogs = localStorage.getItem(STORAGE_KEY);
                 if (savedLogs) {
-                    apiLogs = JSON.parse(savedLogs);
+                    try {
+                        apiLogs = JSON.parse(savedLogs);
+                        console.log(`성공적으로 ${apiLogs.length}개의 로그를 로드했습니다.`);
+                    } catch (e) {
+                        console.error('로그 데이터 파싱 오류:', e);
+                        apiLogs = [];
+                    }
+                } else {
+                    // apiLogs 항목이 없으면 words.html에서 사용하던 'apiLogs' 키도 확인
+                    const oldLogs = localStorage.getItem('apiLogs');
+                    if (oldLogs) {
+                        try {
+                            apiLogs = JSON.parse(oldLogs);
+                            console.log(`이전 형식의 로그 ${apiLogs.length}개를 로드했습니다.`);
+                            // 새로운 키로 저장하고 이전 키 삭제
+                            localStorage.setItem(STORAGE_KEY, oldLogs);
+                            localStorage.removeItem('apiLogs');
+                        } catch (e) {
+                            console.error('이전 로그 데이터 파싱 오류:', e);
+                            apiLogs = [];
+                        }
+                    } else {
+                        console.log('저장된 로그 데이터가 없습니다.');
+                        apiLogs = [];
+                    }
                 }
                 
                 // 토큰 사용량 추정 (실제로는 OpenAI 응답에서 가져와야 함)
@@ -382,6 +412,10 @@
                 
                 // 날짜별로 정렬 (최신 순)
                 apiLogs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                
+                // 콘솔에 토큰 사용량 요약 출력
+                const totalTokens = apiLogs.reduce((sum, log) => sum + (log.tokenUsage?.totalTokens || 0), 0);
+                console.log(`총 토큰 사용량: ${totalTokens} 토큰`);
             }
             
             // 토큰 수 추정 (매우 간단한 구현, 실제로는 더 정확한 방법 필요)
@@ -762,7 +796,7 @@
                 let csvContent = 'data:text/csv;charset=utf-8,';
                 
                 // 헤더
-                csvContent += '번호,시간,영어 단어,정답,학생 입력,결과,토큰 사용량,상태\n';
+                csvContent += '번호,시간,영어 단어,정답,학생 입력,결과,토큰 사용량,상태,해설\n';
                 
                 // 데이터
                 filteredLogs.forEach((log, index) => {
@@ -770,6 +804,8 @@
                     const status = log.success ? '성공' : '실패';
                     const result = log.result === 'correct' ? '정답' : '오답';
                     const tokenUsage = log.tokenUsage ? log.tokenUsage.totalTokens : 'N/A';
+                    // 해설에서 줄바꿈 문자 제거
+                    const explanation = log.explanation ? log.explanation.replace(/\r?\n|\r/g, ' ') : '';
                     
                     const row = [
                         index + 1,
@@ -779,7 +815,8 @@
                         log.studentInput || 'N/A',
                         result,
                         tokenUsage,
-                        status
+                        status,
+                        explanation
                     ];
                     
                     // CSV 형식에 맞게 처리 (따옴표 처리 등)
@@ -793,11 +830,16 @@
                     }).join(',') + '\n';
                 });
                 
+                // 파일 이름에 날짜와 시간 포함
+                const now = new Date();
+                const dateStr = now.toISOString().slice(0, 10);
+                const timeStr = now.toTimeString().slice(0, 8).replace(/:/g, '-');
+                
                 // 다운로드 링크 생성
                 const encodedUri = encodeURI(csvContent);
                 const link = document.createElement('a');
                 link.setAttribute('href', encodedUri);
-                link.setAttribute('download', `api_logs_${new Date().toISOString().slice(0, 10)}.csv`);
+                link.setAttribute('download', `coconutparty_api_logs_${dateStr}_${timeStr}.csv`);
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -811,6 +853,7 @@
                 if (password === ADMIN_PASSWORD) {
                     $('#loginView').addClass('d-none');
                     $('#dashboardView').removeClass('d-none');
+                    localStorage.setItem('adminLoggedIn', 'true');
                     
                     // 로그 데이터 로드 및 표시
                     loadLogsFromStorage();
@@ -826,6 +869,7 @@
                 $('#loginView').removeClass('d-none');
                 $('#password').val('');
                 $('#loginError').addClass('d-none');
+                localStorage.removeItem('adminLoggedIn');
             });
             
             $('#refreshLogsBtn').click(function() {
