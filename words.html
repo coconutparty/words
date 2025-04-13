@@ -596,10 +596,17 @@
                 // 공부 팁 생성
                 generateStudyTip();
                 
+                console.log('랜덤 단어 샘플(처음 5개):', randomWords.slice(0, 5));
+                
                 randomWords.forEach((word, index) => {
                     const sectionId = index < 25 ? 'section1' : 'section2';
                     const container = index < 25 ? container1 : container2;
                     const rowIndex = index % 25;
+                    
+                    // 디버깅 로그 (10개 단어마다 출력)
+                    if (index % 10 === 0) {
+                        console.log(`단어 ${index}: ${word.English} - ${word.Korean}`);
+                    }
                     
                     // 단어 셀 생성
                     const wordCell = $('<div>')
@@ -973,8 +980,19 @@
                     }
                     
                     const promise = new Promise((resolve) => {
-                        // 영어 단어 찾기 (data-original 속성 사용)
-                        const englishWord = $cell.siblings('.word-cell').attr('data-original');
+                        // 영어 단어 찾기 방법 개선
+                        // 현재 셀의 index를 찾아서 같은 행의 word-cell을 정확히 찾음
+                        const rowIndex = $cell.attr('data-row');
+                        const sectionId = $cell.attr('data-section');
+                        const englishWord = $(`.word-cell[data-section="${sectionId}"][data-row="${rowIndex}"]`).attr('data-original');
+                        
+                        console.log('채점 정보:', {
+                            'section': sectionId,
+                            'row': rowIndex,
+                            'englishWord': englishWord,
+                            'correctMeaning': correctAnswer,
+                            'studentInput': input
+                        });
                         
                         // OpenAI API 요청 데이터
                         const openaiData = {
