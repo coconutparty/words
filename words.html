@@ -881,11 +881,15 @@
                                         </div>
                                     </div>
                                     <div class="row mb-3">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <h6>영어 단어:</h6>
+                                            <div class="border p-2 rounded bg-light mb-2 fw-bold">${log.englishWord || 'N/A'}</div>
+                                        </div>
+                                        <div class="col-md-4">
                                             <h6>정답:</h6>
                                             <div class="border p-2 rounded bg-light mb-2">${log.correctAnswer || 'N/A'}</div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <h6>학생 입력:</h6>
                                             <div class="border p-2 rounded bg-light">${log.studentInput || 'N/A'}</div>
                                         </div>
@@ -969,6 +973,9 @@
                     }
                     
                     const promise = new Promise((resolve) => {
+                        // 영어 단어 찾기 (data-original 속성 사용)
+                        const englishWord = $cell.siblings('.word-cell').attr('data-original');
+                        
                         // OpenAI API 요청 데이터
                         const openaiData = {
                             model: "gpt-4o-mini", // 가장 비용 효율적인 모델
@@ -979,7 +986,8 @@
                                 },
                                 {
                                     role: "user",
-                                    content: `정답: ${correctAnswer}
+                                    content: `영어 단어: ${englishWord}
+정답 한국어 의미: ${correctAnswer}
 학생 답변: ${input}
 
 답변 형식:
@@ -1002,6 +1010,7 @@
                             timestamp: new Date(),
                             request: openaiData,
                             correctAnswer: correctAnswer,
+                            englishWord: englishWord,
                             studentInput: input,
                         };
                         
