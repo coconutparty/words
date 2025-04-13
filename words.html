@@ -975,7 +975,7 @@
                             messages: [
                                 {
                                     role: "system",
-                                    content: "당신은 영어 단어의 한국어 의미 유사성을 정확히 평가하고 해설하는 채점관입니다. 학생의 답변이 정답과 의미상 유사하거나 동일하면 정답으로, 의미가 명확히 다르거나 단순히 음역, 영어발음을 그대로 읽었을 경우 오답으로 판단하세요. 먼저 결론(correct/incorrect)을 말하고, 그 다음 한국어로 왜 그렇게 판단했는지 간결하게 설명해주세요."
+                                    content: "당신은 영어 단어의 한국어 의미 유사성을 정확히 평가하고 해설하는 채점관입니다. 학생의 답변이 정답과 의미상 유사하거나 동일하면 정답(1)으로, 의미가 명확히 다르거나 단순히 음역, 영어발음을 그대로 읽었을 경우 오답(0)으로 판단하세요. 먼저 결론(1 또는 0)을 말하고, 그 다음 한국어로 왜 그렇게 판단했는지 간결하게 설명해주세요."
                                 },
                                 {
                                     role: "user",
@@ -983,7 +983,7 @@
 학생 답변: ${input}
 
 답변 형식:
-1. 첫 줄에 'correct' 또는 'incorrect' 중 하나만 응답
+1. 첫 줄에 '1' 또는 '0' 중 하나만 응답 (1: 정답, 0: 오답)
 2. 그 다음 줄부터 한국어로 채점 이유 설명 (왜 정답인지 또는 왜 오답인지)
 
 판단 기준:
@@ -1021,13 +1021,21 @@
                                         const fullResponse = response.choices[0].message.content.trim();
                                         const lines = fullResponse.split('\n');
                                         
-                                        // 첫 줄은 correct/incorrect 판단
+                                        // 첫 줄은 1/0 판단
                                         if (lines.length > 0) {
-                                            const firstLine = lines[0].toLowerCase();
-                                            if (firstLine.includes('correct')) {
+                                            const firstLine = lines[0].trim();
+                                            if (firstLine === '1') {
                                                 result = 'correct';
-                                            } else {
+                                            } else if (firstLine === '0') {
                                                 result = 'incorrect';
+                                            } else {
+                                                // 첫 줄이 1 또는 0이 아닌 경우 내용을 분석
+                                                if (firstLine.toLowerCase().includes('1') || 
+                                                    firstLine.toLowerCase().includes('정답')) {
+                                                    result = 'correct';
+                                                } else {
+                                                    result = 'incorrect';
+                                                }
                                             }
                                             
                                             // 나머지 줄은 설명
