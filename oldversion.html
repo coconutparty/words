@@ -3,28 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>테스트판</title>
+    <title>매일 영단어 50</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #6366f1;
-            --primary-hover: #4f46e5;
-            --secondary-color: #f9fafb;
-            --accent-color: #10b981;
-            --accent-hover: #059669;
-            --border-color: #e5e7eb;
-            --section1-color: rgba(99, 102, 241, 0.05);
-            --section2-color: rgba(16, 185, 129, 0.05);
-            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
-            --button-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --correct-color: #10b981;
-            --wrong-color: #ef4444;
-            --transition-speed: 0.3s;
-            --dark-text: #1f2937;
-            --light-text: #9ca3af;
+            --primary-color: #0f172a;
+            --primary-hover: #1e293b;
+            --secondary-color: #f8fafc;
+            --accent-color: #0ea5e9;
+            --accent-hover: #0284c7;
+            --border-color: #e2e8f0;
+            --section1-color: rgba(30, 41, 59, 0.02);
+            --section2-color: rgba(14, 165, 233, 0.02);
+            --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --button-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --correct-color: #16a34a;
+            --wrong-color: #dc2626;
+            --transition-speed: 0.2s;
+            --dark-text: #0f172a;
+            --light-text: #64748b;
         }
 
         body {
@@ -54,10 +55,6 @@
             margin-bottom: 10px;
             font-size: 2.8rem;
             letter-spacing: -0.5px;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
 
         .app-subtitle {
@@ -73,22 +70,26 @@
             margin-bottom: 30px;
             background-color: white;
             padding: 20px 25px;
-            border-radius: 16px;
+            border-radius: 4px;
             box-shadow: var(--card-shadow);
             transition: all var(--transition-speed);
+            border: 1px solid var(--border-color);
         }
 
         .controls:hover {
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            box-shadow: var(--hover-shadow);
         }
 
         .btn {
-            border-radius: 12px;
+            border-radius: 4px;
             font-weight: 500;
-            padding: 12px 22px;
+            padding: 12px 20px;
             transition: all var(--transition-speed);
             box-shadow: var(--button-shadow);
             border: none;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
         }
 
         .btn-primary {
@@ -99,8 +100,8 @@
         .btn-primary:hover, .btn-primary.active {
             background-color: var(--primary-hover);
             border-color: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(79, 70, 229, 0.2);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(15, 23, 42, 0.1);
         }
 
         .btn-success {
@@ -111,20 +112,20 @@
         .btn-success:hover {
             background-color: var(--accent-hover);
             border-color: var(--accent-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(16, 185, 129, 0.2);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(14, 165, 233, 0.2);
         }
 
         .btn-secondary {
-            background-color: #6b7280;
-            border-color: #6b7280;
+            background-color: #475569;
+            border-color: #475569;
         }
 
         .btn-secondary:hover {
-            background-color: #4b5563;
-            border-color: #4b5563;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(107, 114, 128, 0.2);
+            background-color: #334155;
+            border-color: #334155;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(71, 85, 105, 0.2);
         }
         
         .btn-info {
@@ -137,22 +138,25 @@
             background-color: #2563eb;
             border-color: #2563eb;
             color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(59, 130, 246, 0.2);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.2);
         }
 
         .score-display {
             background-color: white;
-            border-left: 5px solid var(--primary-color);
+            border-left: 4px solid var(--primary-color);
             padding: 20px 25px;
             margin-bottom: 30px;
-            border-radius: 16px;
+            border-radius: 4px;
             box-shadow: var(--card-shadow);
             transition: all var(--transition-speed);
+            border-top: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .score-display:hover {
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            box-shadow: var(--hover-shadow);
         }
 
         .score-text {
@@ -177,7 +181,7 @@
         .section-container {
             flex: 1;
             min-width: 300px;
-            border-radius: 16px;
+            border-radius: 4px;
             overflow: hidden;
             box-shadow: var(--card-shadow);
             transition: transform var(--transition-speed), box-shadow var(--transition-speed);
@@ -186,36 +190,36 @@
         }
 
         .section-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: translateY(-3px);
+            box-shadow: var(--hover-shadow);
         }
 
         .section-header {
-            padding: 18px 22px;
+            padding: 16px 20px;
             font-weight: 600;
             color: white;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 1.1rem;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .section1 .section-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            background-color: var(--primary-color);
         }
 
         .section2 .section-header {
-            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            background-color: var(--accent-color);
         }
 
         .section1 {
             background-color: white;
-            border-top: 4px solid var(--primary-color);
         }
 
         .section2 {
             background-color: white;
-            border-top: 4px solid var(--accent-color);
         }
 
         .word-container {
@@ -230,12 +234,13 @@
         }
 
         .word-cell, .meaning-cell {
-            padding: 16px 18px;
+            padding: 16px 20px;
             background-color: white;
             min-height: 55px;
             display: flex;
             align-items: center;
             transition: all var(--transition-speed);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .word-cell {
@@ -248,29 +253,29 @@
         }
 
         .section1 .word-cell:hover, .section1 .meaning-cell:hover {
-            background-color: rgba(99, 102, 241, 0.05);
+            background-color: var(--section1-color);
         }
 
         .section2 .word-cell:hover, .section2 .meaning-cell:hover {
-            background-color: rgba(16, 185, 129, 0.05);
+            background-color: var(--section2-color);
         }
 
         .word-cell.input-mode, .meaning-cell.input-mode {
-            padding: 10px;
+            padding: 10px 15px;
         }
 
         .input-mode .word-input, .input-mode .meaning-input {
             width: 100%;
-            padding: 12px 16px;
+            padding: 12px 15px;
             border: 1px solid var(--border-color);
-            border-radius: 10px;
+            border-radius: 4px;
             transition: all var(--transition-speed);
             font-size: 1rem;
         }
 
         .input-mode .word-input:focus, .input-mode .meaning-input:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.1);
             outline: none;
         }
 
@@ -280,21 +285,21 @@
 
         .result-correct {
             color: var(--correct-color);
-            background-color: rgba(16, 185, 129, 0.05);
+            background-color: rgba(22, 163, 74, 0.05);
         }
 
         .result-wrong {
             color: var(--wrong-color);
-            background-color: rgba(239, 68, 68, 0.05);
+            background-color: rgba(220, 38, 38, 0.05);
         }
 
         .result-badge {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            border-radius: 2px;
             margin-right: 10px;
             font-weight: bold;
         }
@@ -302,13 +307,11 @@
         .result-correct .result-badge {
             background-color: var(--correct-color);
             color: white;
-            box-shadow: 0 2px 5px rgba(16, 185, 129, 0.3);
         }
 
         .result-wrong .result-badge {
             background-color: var(--wrong-color);
             color: white;
-            box-shadow: 0 2px 5px rgba(239, 68, 68, 0.3);
         }
 
         @media (max-width: 768px) {
@@ -334,15 +337,15 @@
 
         /* 애니메이션 효과 */
         .fade-in {
-            animation: fadeIn 0.6s ease-in-out;
+            animation: fadeIn 0.4s ease-in-out;
         }
 
         .slide-in {
-            animation: slideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: slideIn 0.4s ease-out;
         }
 
         .pulse {
-            animation: pulse 0.6s cubic-bezier(0.4, 0, 0.6, 1);
+            animation: pulse 0.4s cubic-bezier(0.4, 0, 0.6, 1);
         }
 
         @keyframes fadeIn {
@@ -351,13 +354,13 @@
         }
 
         @keyframes slideIn {
-            from { transform: translateY(30px); opacity: 0; }
+            from { transform: translateY(20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
 
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(1.02); }
             100% { transform: scale(1); }
         }
 
@@ -376,16 +379,16 @@
         
         /* 모달 스타일 개선 */
         .modal-content {
-            border-radius: 16px;
+            border-radius: 4px;
             border: none;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            box-shadow: var(--hover-shadow);
             overflow: hidden;
         }
         
         .modal-header {
-            background-color: #f3f4f6;
+            background-color: #f1f5f9;
             border-bottom: 1px solid var(--border-color);
-            padding: 1.5rem;
+            padding: 1.2rem 1.5rem;
         }
         
         .modal-footer {
@@ -399,23 +402,23 @@
         
         /* API 로그 개선 */
         #apiLogContainer {
-            border-radius: 12px;
-            background-color: #f9fafb;
+            border-radius: 4px;
+            background-color: #f8fafc;
         }
         
         /* 기타 요소 개선 */
         pre {
-            border-radius: 12px;
+            border-radius: 4px;
         }
         
         .alert {
-            border-radius: 12px;
+            border-radius: 4px;
         }
         
         .card {
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            border: none;
+            border-radius: 4px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
             overflow: hidden;
         }
         
@@ -424,18 +427,21 @@
         }
         
         .badge {
-            padding: 0.5em 0.8em;
+            padding: 0.4em 0.6em;
             font-weight: 500;
-            border-radius: 8px;
+            border-radius: 2px;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header class="app-header">
-            <h1 class="app-title">겸딩이 단어장</h1>
-            <p class="app-subtitle">홍보는 ㄴㄴ</p>
-            <p class="patchnote">홍보는 ㄴㄴ</p>
+            <h1 class="app-title">매일 영단어 50</h1>
+            <p class="app-subtitle">팁 로딩중...</p>
+            <p class="patchnote"></p>
         </header>
         
         <div class="controls">
