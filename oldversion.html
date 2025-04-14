@@ -10,23 +10,28 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #4e73df;
-            --secondary-color: #f8f9fc;
-            --accent-color: #1cc88a;
-            --border-color: #e3e6f0;
-            --section1-color: rgba(78, 115, 223, 0.05);
-            --section2-color: rgba(28, 200, 138, 0.05);
-            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            --correct-color: #1cc88a;
-            --wrong-color: #e74a3b;
+            --primary-color: #6366f1;
+            --primary-hover: #4f46e5;
+            --secondary-color: #f9fafb;
+            --accent-color: #10b981;
+            --accent-hover: #059669;
+            --border-color: #e5e7eb;
+            --section1-color: rgba(99, 102, 241, 0.05);
+            --section2-color: rgba(16, 185, 129, 0.05);
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            --button-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --correct-color: #10b981;
+            --wrong-color: #ef4444;
             --transition-speed: 0.3s;
+            --dark-text: #1f2937;
+            --light-text: #9ca3af;
         }
 
         body {
             font-family: 'Noto Sans KR', sans-serif;
             padding: 20px;
             background-color: var(--secondary-color);
-            color: #333;
+            color: var(--dark-text);
             line-height: 1.6;
         }
 
@@ -38,8 +43,8 @@
 
         .app-header {
             text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
             border-bottom: 1px solid var(--border-color);
         }
 
@@ -47,12 +52,16 @@
             font-weight: 700;
             color: var(--primary-color);
             margin-bottom: 10px;
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
 
         .app-subtitle {
-            color: #6c757d;
+            color: var(--light-text);
             font-weight: 300;
             font-size: 1.2rem;
         }
@@ -63,17 +72,23 @@
             align-items: center;
             margin-bottom: 30px;
             background-color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
+            padding: 20px 25px;
+            border-radius: 16px;
             box-shadow: var(--card-shadow);
+            transition: all var(--transition-speed);
+        }
+
+        .controls:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
         .btn {
-            border-radius: 6px;
+            border-radius: 12px;
             font-weight: 500;
-            padding: 10px 20px;
+            padding: 12px 22px;
             transition: all var(--transition-speed);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+            box-shadow: var(--button-shadow);
+            border: none;
         }
 
         .btn-primary {
@@ -82,9 +97,10 @@
         }
 
         .btn-primary:hover, .btn-primary.active {
-            background-color: #2e59d9;
-            border-color: #2e59d9;
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
             transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(79, 70, 229, 0.2);
         }
 
         .btn-success {
@@ -93,42 +109,62 @@
         }
 
         .btn-success:hover {
-            background-color: #17a673;
-            border-color: #17a673;
+            background-color: var(--accent-hover);
+            border-color: var(--accent-hover);
             transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(16, 185, 129, 0.2);
         }
 
         .btn-secondary {
-            background-color: #858796;
-            border-color: #858796;
+            background-color: #6b7280;
+            border-color: #6b7280;
         }
 
         .btn-secondary:hover {
-            background-color: #717384;
-            border-color: #717384;
+            background-color: #4b5563;
+            border-color: #4b5563;
             transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(107, 114, 128, 0.2);
+        }
+        
+        .btn-info {
+            background-color: #3b82f6;
+            border-color: #3b82f6;
+            color: white;
+        }
+        
+        .btn-info:hover {
+            background-color: #2563eb;
+            border-color: #2563eb;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(59, 130, 246, 0.2);
         }
 
         .score-display {
             background-color: white;
             border-left: 5px solid var(--primary-color);
-            padding: 15px 20px;
+            padding: 20px 25px;
             margin-bottom: 30px;
-            border-radius: 10px;
+            border-radius: 16px;
             box-shadow: var(--card-shadow);
             transition: all var(--transition-speed);
         }
 
+        .score-display:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
         .score-text {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 500;
-            color: #333;
+            color: var(--dark-text);
         }
 
         .score-value {
             font-weight: 700;
             color: var(--primary-color);
-            font-size: 1.4rem;
+            font-size: 1.5rem;
         }
 
         .word-sections-container {
@@ -141,40 +177,45 @@
         .section-container {
             flex: 1;
             min-width: 300px;
-            border-radius: 10px;
+            border-radius: 16px;
             overflow: hidden;
             box-shadow: var(--card-shadow);
             transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            background-color: white;
+            border: 1px solid var(--border-color);
         }
 
         .section-container:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
 
         .section-header {
-            padding: 15px 20px;
+            padding: 18px 22px;
             font-weight: 600;
             color: white;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            font-size: 1.1rem;
         }
 
         .section1 .section-header {
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
         }
 
         .section2 .section-header {
-            background-color: var(--accent-color);
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
         }
 
         .section1 {
-            background-color: var(--section1-color);
+            background-color: white;
+            border-top: 4px solid var(--primary-color);
         }
 
         .section2 {
-            background-color: var(--section2-color);
+            background-color: white;
+            border-top: 4px solid var(--accent-color);
         }
 
         .word-container {
@@ -189,9 +230,9 @@
         }
 
         .word-cell, .meaning-cell {
-            padding: 15px;
+            padding: 16px 18px;
             background-color: white;
-            min-height: 50px;
+            min-height: 55px;
             display: flex;
             align-items: center;
             transition: all var(--transition-speed);
@@ -199,31 +240,37 @@
 
         .word-cell {
             font-weight: 500;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .meaning-cell {
+            border-left: 1px solid var(--border-color);
         }
 
         .section1 .word-cell:hover, .section1 .meaning-cell:hover {
-            background-color: rgba(78, 115, 223, 0.03);
+            background-color: rgba(99, 102, 241, 0.05);
         }
 
         .section2 .word-cell:hover, .section2 .meaning-cell:hover {
-            background-color: rgba(28, 200, 138, 0.03);
+            background-color: rgba(16, 185, 129, 0.05);
         }
 
         .word-cell.input-mode, .meaning-cell.input-mode {
-            padding: 8px;
+            padding: 10px;
         }
 
         .input-mode .word-input, .input-mode .meaning-input {
             width: 100%;
-            padding: 8px 12px;
+            padding: 12px 16px;
             border: 1px solid var(--border-color);
-            border-radius: 4px;
+            border-radius: 10px;
             transition: all var(--transition-speed);
+            font-size: 1rem;
         }
 
         .input-mode .word-input:focus, .input-mode .meaning-input:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
             outline: none;
         }
 
@@ -233,32 +280,35 @@
 
         .result-correct {
             color: var(--correct-color);
-            background-color: rgba(28, 200, 138, 0.05);
+            background-color: rgba(16, 185, 129, 0.05);
         }
 
         .result-wrong {
             color: var(--wrong-color);
-            background-color: rgba(231, 74, 59, 0.05);
+            background-color: rgba(239, 68, 68, 0.05);
         }
 
         .result-badge {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
-            margin-right: 8px;
+            margin-right: 10px;
+            font-weight: bold;
         }
 
         .result-correct .result-badge {
             background-color: var(--correct-color);
             color: white;
+            box-shadow: 0 2px 5px rgba(16, 185, 129, 0.3);
         }
 
         .result-wrong .result-badge {
             background-color: var(--wrong-color);
             color: white;
+            box-shadow: 0 2px 5px rgba(239, 68, 68, 0.3);
         }
 
         @media (max-width: 768px) {
@@ -284,15 +334,15 @@
 
         /* 애니메이션 효과 */
         .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
+            animation: fadeIn 0.6s ease-in-out;
         }
 
         .slide-in {
-            animation: slideIn 0.5s ease-out;
+            animation: slideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .pulse {
-            animation: pulse 0.5s;
+            animation: pulse 0.6s cubic-bezier(0.4, 0, 0.6, 1);
         }
 
         @keyframes fadeIn {
@@ -301,7 +351,7 @@
         }
 
         @keyframes slideIn {
-            from { transform: translateY(20px); opacity: 0; }
+            from { transform: translateY(30px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
 
@@ -315,11 +365,68 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100px;
+            height: 120px;
         }
 
         .loader .spinner-border {
             color: var(--primary-color);
+            width: 3rem;
+            height: 3rem;
+        }
+        
+        /* 모달 스타일 개선 */
+        .modal-content {
+            border-radius: 16px;
+            border: none;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+        
+        .modal-header {
+            background-color: #f3f4f6;
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            border-top: 1px solid var(--border-color);
+            padding: 1.2rem 1.5rem;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        /* API 로그 개선 */
+        #apiLogContainer {
+            border-radius: 12px;
+            background-color: #f9fafb;
+        }
+        
+        /* 기타 요소 개선 */
+        pre {
+            border-radius: 12px;
+        }
+        
+        .alert {
+            border-radius: 12px;
+        }
+        
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: none;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            padding: 1rem 1.25rem;
+        }
+        
+        .badge {
+            padding: 0.5em 0.8em;
+            font-weight: 500;
+            border-radius: 8px;
         }
     </style>
 </head>
@@ -327,18 +434,30 @@
     <div class="container">
         <header class="app-header">
             <h1 class="app-title">겸딩이 단어장</h1>
-            <p class="app-subtitle">힘내서 공부해랑</p>
+            <p class="app-subtitle">홍보는 ㄴㄴ</p>
+            <p class="patchnote">홍보는 ㄴㄴ</p>
         </header>
         
         <div class="controls">
             <div class="control-group">
-                <button id="hideWords" class="btn btn-primary me-2">단어 가리기</button>
-                <button id="hideMeanings" class="btn btn-primary me-2">뜻 가리기</button>
-                <button id="submitBtn" class="btn btn-success d-none">제출하기</button>
+                <button id="hideWords" class="btn btn-primary me-2">
+                    <i class="fas fa-eye-slash me-1"></i> 단어 가리기
+                </button>
+                <button id="hideMeanings" class="btn btn-primary me-2">
+                    <i class="fas fa-eye-slash me-1"></i> 뜻 가리기
+                </button>
+                <button id="submitBtn" class="btn btn-success d-none">
+                    <i class="fas fa-check me-1"></i> 제출하기
+                </button>
             </div>
-            <button id="refreshWords" class="btn btn-secondary">
-                <i class="fas fa-sync-alt me-1"></i> 새로운 단어
-            </button>
+            <div class="control-group">
+                <button id="refreshWords" class="btn btn-secondary me-2">
+                    <i class="fas fa-sync-alt me-1"></i> 새로운 단어
+                </button>
+                <button id="showApiLogs" class="btn btn-info">
+                    <i class="fas fa-list-alt me-1"></i> API 로그
+                </button>
+            </div>
         </div>
         
         <div id="scoreDisplay" class="score-display d-none fade-in">
@@ -376,28 +495,207 @@
         </div>
     </div>
 
+    <!-- 오류 메시지 Modal -->
+    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorModalLabel"><i class="fas fa-exclamation-triangle text-danger me-2"></i> 오류 발생</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="errorModalBody">
+                    <!-- 오류 메시지가 여기에 표시됩니다 -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- API 로그 Modal -->
+    <div class="modal fade" id="apiLogModal" tabindex="-1" aria-labelledby="apiLogModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="apiLogModalLabel"><i class="fas fa-list-alt me-2"></i> API 호출 로그</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info mb-3">
+                        <i class="fas fa-info-circle me-2"></i> 단어 채점을 위한 API 호출 로그입니다.
+                    </div>
+                    <div id="apiLogContainer" class="border rounded p-3 bg-light" style="max-height: 400px; overflow-y: auto;">
+                        <p class="text-muted text-center">아직 API 호출 기록이 없습니다.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="clearApiLogs" type="button" class="btn btn-warning">로그 지우기</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function() {
             const jsonUrl = 'https://coconutparty.github.io/words/words.json';
+            const localJsonUrl = 'words.json';
             let wordsList = [];
             let currentMode = 'normal'; // normal, hideWords, hideMeanings
+            let errorModalInstance = null; // Modal 인스턴스 저장 변수
+            let apiLogModalInstance = null; // API 로그 Modal 인스턴스
+            let apiLogs = []; // API 호출 로그 저장 배열
+            let consoleErrors = []; // 콘솔 에러 로그 저장 배열
+            
+            // 콘솔 에러 캡처
+            const originalConsoleError = console.error;
+            console.error = function() {
+                // 원래 콘솔 에러 기능 수행
+                originalConsoleError.apply(console, arguments);
+                
+                // 에러 로그 저장
+                const errorArgs = Array.from(arguments).map(arg => {
+                    if (arg instanceof Error) {
+                        return arg.stack || arg.toString();
+                    } else if (typeof arg === 'object') {
+                        try {
+                            return JSON.stringify(arg);
+                        } catch (e) {
+                            return String(arg);
+                        }
+                    } else {
+                        return String(arg);
+                    }
+                });
+                
+                consoleErrors.push({
+                    timestamp: new Date(),
+                    message: errorArgs.join(' '),
+                    context: currentMode
+                });
+            };
+            
+            // 오류 메시지 표시 함수
+            function showErrorAlert(message) {
+                if (!errorModalInstance) {
+                    errorModalInstance = new bootstrap.Modal(document.getElementById('errorModal'));
+                }
+                $('#errorModalBody').text(message);
+                errorModalInstance.show();
+            }
             
             // 단어 데이터 가져오기
             function fetchWords() {
                 $('#loadingIndicator').removeClass('d-none');
                 $('#wordSectionsContainer').addClass('d-none');
                 
-                $.getJSON(jsonUrl, function(data) {
-                    wordsList = data;
-                    displayRandomWords();
-                }).fail(function() {
-                    alert('단어 데이터를 불러오는데 실패했습니다.');
-                }).always(function() {
-                    $('#loadingIndicator').addClass('d-none');
-                    $('#wordSectionsContainer').removeClass('d-none');
+                console.log('로컬 단어 데이터 로드 시도 중: ' + localJsonUrl);
+                
+                // 먼저 로컬 파일 시도
+                $.ajax({
+                    url: localJsonUrl,
+                    dataType: 'json',
+                    timeout: 5000, // 5초 타임아웃
+                    success: function(data) {
+                        console.log('로컬 단어 데이터 로드 성공! 단어 수: ' + data.length);
+                        wordsList = data;
+                        displayRandomWords();
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error('로컬 단어 데이터 로드 실패:', textStatus, errorThrown);
+                        
+                        // 원격 JSON URL 시도
+                        console.log('원격 URL로 시도합니다: ' + jsonUrl);
+                        
+                        $.ajax({
+                            url: jsonUrl,
+                            dataType: 'json',
+                            timeout: 10000, // 10초 타임아웃
+                            success: function(data) {
+                                console.log('원격 단어 데이터 로드 성공! 단어 수: ' + data.length);
+                                wordsList = data;
+                                displayRandomWords();
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                console.error('원격 URL에서도 로드 실패:', textStatus, errorThrown);
+                                showErrorAlert('단어 데이터를 불러오는데 실패했습니다. 네트워크 연결 또는 JSON 파일 경로를 확인해주세요.<br><br>오류 정보: ' + textStatus + ' - ' + errorThrown);
+                                
+                                // 테스트용 더미 데이터 생성
+                                createDummyData();
+                            }
+                        });
+                    },
+                    complete: function() {
+                        $('#loadingIndicator').addClass('d-none');
+                        $('#wordSectionsContainer').removeClass('d-none');
+                    }
                 });
+            }
+            
+            // 테스트용 더미 데이터 생성
+            function createDummyData() {
+                console.log('테스트용 더미 데이터를 생성합니다.');
+                
+                wordsList = [
+                    { English: "apple", Korean: "사과" },
+                    { English: "banana", Korean: "바나나" },
+                    { English: "cat", Korean: "고양이" },
+                    { English: "dog", Korean: "개" },
+                    { English: "elephant", Korean: "코끼리" },
+                    { English: "friend", Korean: "친구" },
+                    { English: "good", Korean: "좋은" },
+                    { English: "happy", Korean: "행복한" },
+                    { English: "important", Korean: "중요한" },
+                    { English: "jump", Korean: "점프하다" },
+                    { English: "king", Korean: "왕" },
+                    { English: "love", Korean: "사랑" },
+                    { English: "money", Korean: "돈" },
+                    { English: "night", Korean: "밤" },
+                    { English: "open", Korean: "열다" },
+                    { English: "paper", Korean: "종이" },
+                    { English: "quick", Korean: "빠른" },
+                    { English: "run", Korean: "달리다" },
+                    { English: "study", Korean: "공부하다" },
+                    { English: "time", Korean: "시간" },
+                    { English: "umbrella", Korean: "우산" },
+                    { English: "very", Korean: "매우" },
+                    { English: "water", Korean: "물" },
+                    { English: "xylophone", Korean: "실로폰" },
+                    { English: "yellow", Korean: "노란색" },
+                    { English: "zebra", Korean: "얼룩말" },
+                    { English: "above", Korean: "위에" },
+                    { English: "below", Korean: "아래에" },
+                    { English: "computer", Korean: "컴퓨터" },
+                    { English: "desk", Korean: "책상" },
+                    { English: "earth", Korean: "지구" },
+                    { English: "family", Korean: "가족" },
+                    { English: "garden", Korean: "정원" },
+                    { English: "house", Korean: "집" },
+                    { English: "ice", Korean: "얼음" },
+                    { English: "juice", Korean: "주스" },
+                    { English: "key", Korean: "열쇠" },
+                    { English: "light", Korean: "빛" },
+                    { English: "mountain", Korean: "산" },
+                    { English: "name", Korean: "이름" },
+                    { English: "ocean", Korean: "바다" },
+                    { English: "pencil", Korean: "연필" },
+                    { English: "question", Korean: "질문" },
+                    { English: "river", Korean: "강" },
+                    { English: "star", Korean: "별" },
+                    { English: "tree", Korean: "나무" },
+                    { English: "under", Korean: "아래" },
+                    { English: "voice", Korean: "목소리" },
+                    { English: "window", Korean: "창문" },
+                    { English: "young", Korean: "젊은" }
+                ];
+                
+                displayRandomWords();
+                
+                // 더미 데이터 사용 알림
+                showErrorAlert('외부 단어 데이터를 불러오는데 실패하여 테스트용 더미 데이터를 사용합니다. 인터넷 연결 상태를 확인해주세요.');
             }
             
             // 랜덤 단어 50개 선정 및 표시
@@ -409,13 +707,20 @@
                 container1.empty();
                 container2.empty();
                 
-                // 제미나이로 공부 팁 생성
+                // 공부 팁 생성
                 generateStudyTip();
+                
+                console.log('랜덤 단어 샘플(처음 5개):', randomWords.slice(0, 5));
                 
                 randomWords.forEach((word, index) => {
                     const sectionId = index < 25 ? 'section1' : 'section2';
                     const container = index < 25 ? container1 : container2;
                     const rowIndex = index % 25;
+                    
+                    // 디버깅 로그 (10개 단어마다 출력)
+                    if (index % 10 === 0) {
+                        console.log(`단어 ${index}: ${word.English} - ${word.Korean}`);
+                    }
                     
                     // 단어 셀 생성
                     const wordCell = $('<div>')
@@ -442,7 +747,7 @@
                 resetMode();
             }
             
-            // 제미나이로 공부 팁 생성
+            // 공부 팁 생성
             function generateStudyTip() {
                 // 로딩 상태 표시
                 $('.app-subtitle').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 팁 생성 중...');
@@ -499,7 +804,7 @@
             function resetMode() {
                 currentMode = 'normal';
                 $('#hideWords, #hideMeanings').removeClass('active');
-                $('#submitBtn').addClass('d-none');
+                $('#submitBtn').addClass('d-none').prop('disabled', false).html('제출하기');
                 $('#scoreDisplay').addClass('d-none');
                 
                 $('.word-cell, .meaning-cell').each(function() {
@@ -519,7 +824,7 @@
                 resetMode();
                 currentMode = 'hideWords';
                 $(this).addClass('active pulse');
-                $('#submitBtn').removeClass('d-none').addClass('pulse');
+                $('#submitBtn').removeClass('d-none').prop('disabled', false).addClass('pulse');
                 
                 $('.word-cell').each(function() {
                     $(this).addClass('input-mode');
@@ -558,7 +863,7 @@
                 resetMode();
                 currentMode = 'hideMeanings';
                 $(this).addClass('active pulse');
-                $('#submitBtn').removeClass('d-none').addClass('pulse');
+                $('#submitBtn').removeClass('d-none').prop('disabled', false).addClass('pulse');
                 
                 $('.meaning-cell').each(function() {
                     $(this).addClass('input-mode');
@@ -589,25 +894,181 @@
             
             // 제출 및 채점
             $('#submitBtn').click(function() {
-                // 로딩 표시
+                // 이미 비활성화 상태면 중복 실행 방지
+                if ($(this).prop('disabled')) {
+                    return;
+                }
+                
+                // 로딩 표시 및 비활성화
                 const $btn = $(this);
                 $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 채점 중...');
                 
+                let gradingPromise;
                 if (currentMode === 'hideWords') {
-                    gradeWords().then(() => {
-                        $btn.prop('disabled', false).html('제출하기');
-                    });
+                    gradingPromise = gradeWords();
                 } else if (currentMode === 'hideMeanings') {
-                    gradeMeanings().then(() => {
-                        $btn.prop('disabled', false).html('제출하기');
+                    gradingPromise = gradeMeanings();
+                }
+
+                if (gradingPromise) {
+                    // 채점 완료 후 버튼을 비활성화 상태로 유지
+                    gradingPromise.finally(() => {
+                        // 버튼 상태 유지 (비활성화)
                     });
+                } else {
+                    // 채점 함수가 호출되지 않은 경우 (이론상 발생하지 않음)
+                    $btn.prop('disabled', false).html('제출하기');
                 }
             });
             
-            // 뜻 채점
+            // API 로그 모달 초기화
+            function initApiLogModal() {
+                if (!apiLogModalInstance) {
+                    apiLogModalInstance = new bootstrap.Modal(document.getElementById('apiLogModal'));
+                }
+            }
+
+            // API 로그 표시 함수
+            function showApiLogs() {
+                initApiLogModal();
+                
+                const $logContainer = $('#apiLogContainer');
+                
+                // 로그 및 콘솔 에러가 모두 없는 경우
+                if (apiLogs.length === 0 && consoleErrors.length === 0) {
+                    $logContainer.html('<p class="text-muted text-center">아직 API 호출 기록이나 콘솔 에러가 없습니다.</p>');
+                    apiLogModalInstance.show();
+                    return;
+                }
+                
+                // 로그 HTML 생성
+                let logsHtml = '';
+                
+                // 콘솔 에러 로그 표시
+                if (consoleErrors.length > 0) {
+                    logsHtml += `
+                        <div class="card mb-4">
+                            <div class="card-header bg-warning bg-opacity-10">
+                                <strong>콘솔 에러 로그 (${consoleErrors.length}개)</strong>
+                            </div>
+                            <div class="card-body">`;
+                    
+                    consoleErrors.forEach((error, index) => {
+                        const timestamp = new Date(error.timestamp).toLocaleString();
+                        logsHtml += `
+                            <div class="alert alert-danger mb-2">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <strong>#${index + 1} - ${timestamp}</strong>
+                                    <span>상태: ${error.context}</span>
+                                </div>
+                                <pre class="bg-dark text-light p-2 rounded mb-0" style="overflow-x: auto;">${error.message}</pre>
+                            </div>`;
+                    });
+                    
+                    logsHtml += `
+                            </div>
+                        </div>`;
+                }
+                
+                // API 호출 로그 표시
+                if (apiLogs.length > 0) {
+                    logsHtml += `
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary bg-opacity-10">
+                                <strong>API 호출 로그 (${apiLogs.length}개)</strong>
+                            </div>
+                            <div class="card-body">`;
+                    
+                    apiLogs.forEach((log, index) => {
+                        const timestamp = new Date(log.timestamp).toLocaleString();
+                        const statusClass = log.success ? 'success' : 'danger';
+                        const statusText = log.success ? '성공' : '실패';
+                        
+                        logsHtml += `
+                            <div class="card mb-3">
+                                <div class="card-header bg-${statusClass} bg-opacity-10 d-flex justify-content-between">
+                                    <span><strong>#${index + 1}</strong> - ${timestamp}</span>
+                                    <span class="badge bg-${statusClass}">${statusText}</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="alert alert-${log.result === 'correct' ? 'success' : 'danger'} mb-3">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <strong>AI 판정:</strong> 
+                                            <span class="badge bg-${log.result === 'correct' ? 'success' : 'danger'}">${log.result === 'correct' ? '정답' : '오답'}</span>
+                                        </div>
+                                        <div class="border-top pt-2 mt-2">
+                                            <strong>AI 해설:</strong>
+                                            <div class="mt-2" style="white-space: pre-line">${log.explanation || '해설 없음'}</div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <h6>영어 단어:</h6>
+                                            <div class="border p-2 rounded bg-light mb-2 fw-bold">${log.englishWord || 'N/A'}</div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h6>정답:</h6>
+                                            <div class="border p-2 rounded bg-light mb-2">${log.correctAnswer || 'N/A'}</div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h6>학생 입력:</h6>
+                                            <div class="border p-2 rounded bg-light">${log.studentInput || 'N/A'}</div>
+                                        </div>
+                                    </div>
+                                    <h6 class="dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#apiDetail${index}" aria-expanded="false">
+                                        API 상세 정보 <i class="fas fa-chevron-down ms-1 small"></i>
+                                    </h6>
+                                    <div class="collapse" id="apiDetail${index}">
+                                        <h6>API 요청:</h6>
+                                        <pre class="bg-dark text-light p-2 rounded small" style="max-height: 150px; overflow-y: auto;">${JSON.stringify(log.request, null, 2)}</pre>
+                                        <h6>API 응답:</h6>
+                                        <pre class="bg-dark text-light p-2 rounded small" style="max-height: 150px; overflow-y: auto;">${JSON.stringify(log.response, null, 2)}</pre>
+                                        <h6>원본 응답:</h6>
+                                        <pre class="bg-light p-2 rounded">${log.rawResponse || 'N/A'}</pre>
+                                        ${log.error ? `<h6>오류:</h6><pre class="bg-danger bg-opacity-10 text-danger p-2 rounded">${JSON.stringify(log.error, null, 2)}</pre>` : ''}
+                                    </div>
+                                </div>
+                            </div>`;
+                    });
+                    
+                    logsHtml += `
+                            </div>
+                        </div>`;
+                }
+                
+                $logContainer.html(logsHtml);
+                apiLogModalInstance.show();
+            }
+            
+            // 로그 지우기 함수
+            function clearApiLogs() {
+                apiLogs = [];
+                consoleErrors = [];
+                $('#apiLogContainer').html('<p class="text-muted text-center">아직 API 호출 기록이나 콘솔 에러가 없습니다.</p>');
+            }
+            
+            // API 로그 버튼 클릭 이벤트
+            $('#showApiLogs').click(function() {
+                showApiLogs();
+            });
+            
+            // 로그 지우기 버튼 이벤트
+            $('#clearApiLogs').click(function() {
+                clearApiLogs();
+            });
+            
+            // 뜻 채점 (OpenAI API 사용)
             function gradeMeanings() {
-                const geminiApiKey = 'AIzaSyDiUyH7SfMGbdK6cSuA-2CIsVzGmWcWzg4';
                 const promises = [];
+                let totalCells = $('.meaning-cell.input-mode').length;
+                let processedCount = 0;
+                
+                // 진행 상태 표시 업데이트 함수
+                function updateProgress() {
+                    processedCount++;
+                    const progress = Math.floor((processedCount / totalCells) * 100);
+                    $('#submitBtn').html(`<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 채점 중... ${progress}%`);
+                }
                 
                 $('.meaning-cell.input-mode').each(function() {
                     const $cell = $(this);
@@ -616,49 +1077,179 @@
                     
                     $cell.removeClass('result-correct result-wrong');
                     
+                    // 입력이 없는 경우 바로 오답 처리
+                    if (!input) {
+                        $cell.addClass('result-wrong');
+                        $cell.html(`<span class="result-badge">X</span>${correctAnswer}<small class="ms-2 text-muted text-danger">(입력 없음)</small>`);
+                        updateProgress();
+                        return promises.push(Promise.resolve(false));
+                    }
+                    
+                    // 입력과
+                    const rowIndex = $cell.attr('data-row');
+                    const sectionId = $cell.attr('data-section');
+                    const englishWord = $(`.word-cell[data-section="${sectionId}"][data-row="${rowIndex}"]`).attr('data-original');
+                    
+                    // 입력과 정답이 정확히 일치하면 바로 정답 처리 (API 호출 절약)
+                    if (input === correctAnswer) {
+                        $cell.addClass('result-correct');
+                        $cell.html(`<span class="result-badge">O</span>${correctAnswer}`);
+                        updateProgress();
+                        return promises.push(Promise.resolve(true));
+                    }
+                    
                     const promise = new Promise((resolve) => {
-                        // 구글 제미나이로 채점 - 유사한 뜻이면 정답으로 인정
-                        const geminiData = {
-                            contents: [{
-                                parts: [{
-                                    text: `한국어 단어의 의미가 비슷한지 판단해주세요. 의미가 비슷하거나 유사하면 "correct"를, 의미가 완전히 다르거나 틀렸으면 "incorrect"라고만 답변해주세요.
-                                    정답: ${correctAnswer}
-                                    학생 답변: ${input}
-                                    
-                                    동의어, 유사어, 비슷한 의미를 담고 있으면 모두 정답으로 인정합니다. 완전히 동일하지 않아도 됩니다. 비슷한 의미면 correct로 판단해주세요.`
-                                }]
-                            }]
+                        console.log('채점 정보:', {
+                            'section': sectionId,
+                            'row': rowIndex,
+                            'englishWord': englishWord,
+                            'correctMeaning': correctAnswer,
+                            'studentInput': input
+                        });
+                        
+                        // OpenAI API 요청 데이터
+                        const openaiData = {
+                            model: "gpt-4o-mini", // 가장 비용 효율적인 모델
+                            messages: [
+                                {
+                                    role: "system",
+                                    content: "당신은 영어 단어의 한국어 의미 유사성을 정확히 평가하고 해설하는 채점관입니다. 학생이 입력한 한국어 답변이 영어 단어의 실제 의미와 일치하는지 평가합니다. 원래 저장된 한국어 의미와 정확히 일치하지 않더라도, 영어 단어의 실제 의미를 잘 반영한다면 정답으로 인정합니다. 정확한 뜻이 아니더라도 영어 단어의 의미에 부합하는 동의어, 유사 표현은 모두 정답으로 인정해야 합니다. 먼저 결론(1 또는 0)을 말하고, 그 다음 한국어로 왜 그렇게 판단했는지 간결하게 설명해주세요."
+                                },
+                                {
+                                    role: "user",
+                                    content: `영어 단어: ${englishWord}
+기존 한국어 의미: ${correctAnswer}
+학생 답변(한국어): ${input}
+
+답변 형식:
+1. 첫 줄에 '1' 또는 '0' 중 하나만 응답 (1: 정답, 0: 오답)
+2. 그 다음 줄부터 한국어로 채점 이유 설명
+
+판단 기준:
+- 학생 답변이 영어 단어 '${englishWord}'의 실제 의미와 일치하면 정답입니다.
+- 기존 한국어 의미 '${correctAnswer}'와 다르더라도, 영어 단어의 실제 의미를 올바르게 표현했다면 정답입니다.
+- 동의어, 유사 표현, 비슷한 설명은 모두 정답으로 인정합니다.
+- 핵심 의미가 일치하면 사소한 차이는 무시합니다.
+- 학생의 답변이 정답보다 더 구체적이거나 포괄적이어도 핵심 의미가 맞으면 정답입니다.
+- 단순히 영어단어의 발음을 한국어로 표현한 것은 오답으로 판단합니다.
+- 영어 단어 '${englishWord}'의 의미와 완전히 다른 경우에만 오답으로 판단합니다.`
+                                }
+                            ],
+                            temperature: 0.1, // 일관된 결과를 위해 낮게 설정
+                            max_tokens: 150 // 더 긴 설명을 위해 토큰 수 증가
                         };
                         
+                        // API 로그용 정보 저장
+                        const logEntry = {
+                            timestamp: new Date(),
+                            request: openaiData,
+                            correctAnswer: correctAnswer,
+                            englishWord: englishWord,
+                            studentInput: input,
+                        };
+                        
+                        // 백엔드 프록시 API 호출
                         $.ajax({
-                            url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiApiKey}`,
+                            url: '/api/openai-proxy', // Vercel의 API 경로
                             type: 'POST',
                             contentType: 'application/json',
-                            data: JSON.stringify(geminiData),
+                            data: JSON.stringify(openaiData),
                             success: function(response) {
-                                const result = response.candidates[0].content.parts[0].text.trim().toLowerCase();
-                                
-                                if (result.includes('correct')) {
-                                    $cell.addClass('result-correct');
-                                    $cell.html(`<span class="result-badge">O</span>${correctAnswer}<small class="ms-2 text-muted">(입력: ${input})</small>`);
-                                    resolve(true);
-                                } else {
+                                try {
+                                    let result = 'incorrect'; // 기본값은 오답
+                                    let explanation = ''; // 설명 부분
+                                    
+                                    // OpenAI 응답 구조에 맞게 파싱
+                                    if (response.choices && response.choices.length > 0 && response.choices[0].message) {
+                                        const fullResponse = response.choices[0].message.content.trim();
+                                        const lines = fullResponse.split('\n');
+                                        
+                                        // 첫 줄은 1/0 판단
+                                        if (lines.length > 0) {
+                                            const firstLine = lines[0].trim();
+                                            if (firstLine === '1') {
+                                                result = 'correct';
+                                            } else if (firstLine === '0') {
+                                                result = 'incorrect';
+                                            } else {
+                                                // 첫 줄이 1 또는 0이 아닌 경우 내용을 분석
+                                                if (firstLine.toLowerCase().includes('1') || 
+                                                    firstLine.toLowerCase().includes('정답')) {
+                                                    result = 'correct';
+                                                } else {
+                                                    result = 'incorrect';
+                                                }
+                                            }
+                                            
+                                            // 나머지 줄은 설명
+                                            if (lines.length > 1) {
+                                                explanation = lines.slice(1).join('\n').trim();
+                                            }
+                                        }
+                                    }
+
+                                    // API 로그 저장
+                                    logEntry.response = response;
+                                    logEntry.success = true;
+                                    logEntry.result = result;
+                                    logEntry.rawResponse = response.choices && response.choices.length > 0 && response.choices[0].message 
+                                        ? response.choices[0].message.content.trim() 
+                                        : 'N/A';
+                                    logEntry.explanation = explanation;
+                                    apiLogs.push(logEntry);
+
+                                    if (result === 'correct') {
+                                        $cell.addClass('result-correct');
+                                        $cell.html(`<span class="result-badge">O</span>${correctAnswer}<small class="ms-2 text-muted">(입력: ${input})</small>`);
+                                        resolve(true);
+                                    } else {
+                                        $cell.addClass('result-wrong');
+                                        $cell.html(`<span class="result-badge">X</span>${correctAnswer}<small class="ms-2 text-muted text-danger">(입력: ${input})</small>`);
+                                        resolve(false);
+                                    }
+                                } catch (error) {
+                                    console.error('뜻 채점 파싱 오류 (OpenAI):', error, response);
+                                    // API 로그 저장 (오류)
+                                    logEntry.response = response;
+                                    logEntry.success = false;
+                                    logEntry.error = error.toString();
+                                    logEntry.result = 'error';
+                                    logEntry.rawResponse = 'N/A';
+                                    apiLogs.push(logEntry);
+                                    
+                                    // 파싱 오류 시 사용자에게 메시지 표시 및 모달 띄우기
+                                    showErrorAlert('채점 결과 처리 중 오류가 발생했습니다. API 응답 형식을 확인해주세요. (콘솔에서 자세한 정보 확인 가능)');
                                     $cell.addClass('result-wrong');
-                                    $cell.html(`<span class="result-badge">X</span>${correctAnswer}<small class="ms-2 text-muted">(입력: ${input})</small>`);
+                                    $cell.html(`<span class="result-badge">!</span><span class="text-danger">채점 오류</span><small class="ms-2 text-muted">(정답: ${correctAnswer})</small>`);
                                     resolve(false);
                                 }
+                                
+                                updateProgress();
                             },
-                            error: function() {
-                                // API 오류 시 단순 비교로 대체
+                            error: function(error) {
+                                console.error('OpenAI API 오류:', error);
+                                
+                                // API 로그 저장 (오류)
+                                logEntry.success = false;
+                                logEntry.error = error.statusText || '네트워크 오류';
+                                logEntry.result = 'error';
+                                logEntry.rawResponse = 'N/A';
+                                apiLogs.push(logEntry);
+                                
+                                // API 오류 시 사용자에게 모달 띄우기
+                                showErrorAlert('채점 API 호출에 실패했습니다. 네트워크 연결 또는 API 키를 확인해주세요.');
+                                // API 오류 시 단순 비교
                                 if (input === correctAnswer) {
                                     $cell.addClass('result-correct');
                                     $cell.html(`<span class="result-badge">O</span>${correctAnswer}`);
                                     resolve(true);
                                 } else {
                                     $cell.addClass('result-wrong');
-                                    $cell.html(`<span class="result-badge">X</span>${correctAnswer}`);
+                                    $cell.html(`<span class="result-badge">X</span>${correctAnswer}<small class="ms-2 text-muted text-danger">(입력: ${input})</small>`);
                                     resolve(false);
                                 }
+                                
+                                updateProgress();
                             }
                         });
                     });
@@ -668,13 +1259,13 @@
                 
                 return Promise.all(promises).then(results => {
                     const correctCount = results.filter(result => result).length;
+                    $('#submitBtn').html('채점 완료');
                     showScore(correctCount);
                 });
             }
             
             // 단어 채점 - 영단어는 정확히 일치해야만 정답
             function gradeWords() {
-                const geminiApiKey = 'AIzaSyDiUyH7SfMGbdK6cSuA-2CIsVzGmWcWzg4';
                 const promises = [];
                 
                 $('.word-cell.input-mode').each(function() {
@@ -693,10 +1284,11 @@
                         $cell.html(`<span class="result-badge">O</span>${correctAnswer}`);
                     } else {
                         $cell.addClass('result-wrong');
-                        $cell.html(`<span class="result-badge">X</span>${correctAnswer}`);
+                        // 오답 시 사용자 입력 표시 추가
+                        $cell.html(`<span class="result-badge">X</span>${correctAnswer}<small class="ms-2 text-muted text-danger">(입력: ${input})</small>`);
                     }
                     
-                    // 즉시 결과 반환 (제미나이 API 호출 없음)
+                    // 즉시 결과 반환
                     promises.push(Promise.resolve(isCorrect));
                 });
                 
@@ -729,7 +1321,7 @@
                 
                 setTimeout(() => {
                     displayRandomWords();
-                    $(this).prop('disabled', false).html('새로운 단어');
+                    $(this).prop('disabled', false).html('<i class="fas fa-sync-alt me-1"></i> 새로운 단어');
                 }, 300);
             });
             
